@@ -37,29 +37,11 @@ spec:
 ### Required Fields
 
 - `.spec.requests`
-  - required: true
   - type: array
 - `.spec.requests.options`
-  - required: true
   - type: object
 - `.spec.requests.url` or `.spec.requests.uri`
-  - required: true
   - type: string
-
-### Optional Fields
-
-- `.metadata.labels[kapitan.razee.io/Reconcile]`
-  - required: false
-  - type: string
-  - default: 'true'
-- `.metadata.labels[kapitan.razee.io/mode]`
-  - required: false
-  - type: string
-  - default: 'MergePatch'
-- `.spec.requests.optional`
-  - required: false
-  - type: boolean
-  - default: false
 
 ## Features
 
@@ -87,9 +69,12 @@ authenticating with an S3 object store.
 
 `.metadata.labels[kapitan.razee.io/Reconcile]`
 
-A kapitan resource (parent) will clean up a resources it applies (child) when
+- DEFAULT: `true`
+  - A kapitan resource (parent) will clean up a resources it applies (child) when
 either the child is no longer in the parent resource definition or the parent is
-deleted. This behavior can be overridden when a child's resource definition has
+deleted.
+- `false`
+  - This behavior can be overridden when a child's resource definition has
 the label `kapitan.razee.io/Reconcile=false`.
 
 ### Resource Update Mode
