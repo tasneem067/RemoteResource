@@ -67,7 +67,7 @@ authenticating with an S3 object store.
 
 ### Reconcile
 
-`.metadata.labels[kapitan.razee.io/Reconcile]`
+Child resource: `.metadata.labels[kapitan.razee.io/Reconcile]`
 
 - DEFAULT: `true`
   - A kapitan resource (parent) will clean up a resources it applies (child) when
@@ -79,7 +79,7 @@ the label `kapitan.razee.io/Reconcile=false`.
 
 ### Resource Update Mode
 
-`.metadata.labels[kapitan.razee.io/mode]`
+Child resource: `.metadata.labels[kapitan.razee.io/mode]`
 
 Kapitan resources default to merge patching children. This behavior can be
 overridden when a child's resource definition has the label
