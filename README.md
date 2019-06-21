@@ -45,7 +45,9 @@ spec:
 
 ## Features
 
-### Options
+### Requests
+
+#### Options
 
 `.spec.requests.options`
 
@@ -59,7 +61,7 @@ authenticating with an S3 object store.
   - required: [url || uri]
   - optional: [any other other options to be passed along with the request]
 
-### Optional
+#### Optional
 
 `.spec.requests.optional`
 
