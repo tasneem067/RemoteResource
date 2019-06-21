@@ -75,7 +75,9 @@ authenticating with an S3 object store.
 - Schema:
   - type: boolean
 
-### Reconcile
+### Managed Resource Labels
+
+#### Reconcile
 
 Child resource: `.metadata.labels[kapitan.razee.io/Reconcile]`
 
@@ -87,7 +89,7 @@ deleted.
   - This behavior can be overridden when a child's resource definition has
 the label `kapitan.razee.io/Reconcile=false`.
 
-### Resource Update Mode
+#### Resource Update Mode
 
 Child resource: `.metadata.labels[kapitan.razee.io/mode]`
 
