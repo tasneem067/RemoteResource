@@ -64,6 +64,10 @@ authenticating with an S3 object store.
   - if download or applying child resource fails, RemoteResource will continue
   processing the rest of the defined requests, and will report a warning to `.status`.
 
+Schema:
+
+- type: boolean
+
 ### Reconcile
 
 Child resource: `.metadata.labels[kapitan.razee.io/Reconcile]`
