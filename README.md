@@ -40,7 +40,7 @@ spec:
   - type: array
   - items:
     - type: object
-    - required: [options, options.uri || options.url]
+    - required: [options]
 
 ## Features
 
@@ -53,6 +53,11 @@ This means you can specify things like headers for authentication in this sectio
 See [RemoteResourceS3](https://github.com/razee-io/RemoteResourceS3) for
 authenticating with an S3 object store.
 
+- Schema:
+  - type: object
+  - required: [url || uri]
+  - optional: [any other other options to be passed along with the request]
+
 ### Optional Request
 
 `.spec.requests.optional`
@@ -64,9 +69,8 @@ authenticating with an S3 object store.
   - if download or applying child resource fails, RemoteResource will continue
   processing the rest of the defined requests, and will report a warning to `.status`.
 
-Schema:
-
-- type: boolean
+- Schema:
+  - type: boolean
 
 ### Reconcile
 
