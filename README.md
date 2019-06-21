@@ -38,10 +38,9 @@ spec:
 
 - `.spec.requests`
   - type: array
-- `.spec.requests.options`
-  - type: object
-- `.spec.requests.url` or `.spec.requests.uri`
-  - type: string
+  - items:
+    - type: object
+    - required: [options, options.uri || options.url]
 
 ## Features
 
