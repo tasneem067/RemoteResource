@@ -40,11 +40,12 @@ spec:
   - type: array
   - items:
     - type: object
-    - required: [options]
+    - required: [[options](#Options)]
+    - optional: [[optional](#Optional)]
 
 ## Features
 
-### Request Options
+### Options
 
 `.spec.requests.options`
 
@@ -58,7 +59,7 @@ authenticating with an S3 object store.
   - required: [url || uri]
   - optional: [any other other options to be passed along with the request]
 
-### Optional Request
+### Optional
 
 `.spec.requests.optional`
 
