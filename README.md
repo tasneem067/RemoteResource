@@ -30,6 +30,12 @@ spec:
         headers:
           <header_key1>: <header_value1>
           <header_key2>: <header_value2>
+          <header_key3>:
+            valueFrom:
+              secretKeyRef:
+                name: <name of secret resource>
+                namespace: <optional namespace of secret resource>
+                key: <key in secret>
     - optional: true
       options:
         url: http://<source_repo_url>/<file_name2>
@@ -61,6 +67,11 @@ spec:
 to the http request. This means you can specify things like headers for
 authentication in this section. See [RemoteResourceS3](https://github.com/razee-io/RemoteResourceS3)
 for authenticating with an S3 object store.
+
+**Note:** You can reference secret data in your header options by setting the value
+of any key in the headers to be `valueFrom.secretKeyRef`.
+eg. `.spec.requests[].options.headers.<yourHeaderKey> =
+.valueFrom.secretKeyRef.{name, namespace, key}`
 
 **Schema:**
 
