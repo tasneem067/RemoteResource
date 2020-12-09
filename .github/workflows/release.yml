@@ -1,0 +1,32 @@
+name: Docker Image CI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        docker tag quay.io/razee/remoteresource:${GITHUB_SHA}
+        docker images
+        ./build/process-template.sh kubernetes/RemoteResource/resource.yaml >/tmp/resource.yaml
+        
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
