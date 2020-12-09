@@ -1,0 +1,19 @@
+name: Docker Image CI
+
+on:
+  release:
+    types: [prereleased]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --rm -t "quay.io/razee/remoteresource:${GITHUB_SHA}"
+        docker login -u="${secrets.QUAY_ID}" -p="${secrets.QUAY_TOKEN}" quay.io
+        docker push "quay.io/razee/remoteresource:${GITHUB_SHA}"
