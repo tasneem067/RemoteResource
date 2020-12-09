@@ -24,5 +24,5 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile --rm -t "quay.io/razee/remoteresource:${GITHUB_SHA}"
-        echo "${QUAY_TOKEN}" | docker login -u="${QUAY_ID}" --password-stdin
+        echo "${QUAY_TOKEN}" | docker login -u="${QUAY_ID}" --password-stdin quay.io
         docker push "quay.io/razee/remoteresource:${GITHUB_SHA}
