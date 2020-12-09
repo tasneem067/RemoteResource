@@ -22,4 +22,4 @@ jobs:
         npm run lint
         npm test
     - name: Build the Docker image
-      run: docker build --rm -t "quay.io/razee/remoteresource:${GITHUB_SHA}"
+      run: docker build . --file Dockerfile --rm -t "quay.io/razee/remoteresource:${GITHUB_SHA}"
