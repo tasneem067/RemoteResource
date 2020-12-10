@@ -38,7 +38,7 @@ jobs:
          echo IMAGE_ID=$IMAGE_ID
          echo VERSION=$VERSION
          docker push "${QREPOURL}:${VERSION}"
-         docker tag quay.io/tasneem067/tasneem_test1:${GITHUB_SHA} ${QREPOURL}:${VERSION}
+         docker tag ${QREPOURL}:${VERSION} ${QREPOURL}:${GITHUB_SHA}
          ./build/process-template.sh kubernetes/RemoteResource/resource.yaml >/tmp/resource.yaml
    
    #Publish to npm registry
