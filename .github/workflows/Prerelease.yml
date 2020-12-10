@@ -21,4 +21,9 @@ jobs:
       run: |
         docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
         docker login -u="${USERNAME}" -p="${PASSWORD}" quay.io
-        docker push "${QREPOURL}:${GITHUB_SHA}"
+        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+        [ "$VERSION" == "master" ] && VERSION=latest
+        echo IMAGE_ID=$IMAGE_ID
+        echo VERSION=$VERSION
+        docker push "${QREPOURL}:${VERSION}"
