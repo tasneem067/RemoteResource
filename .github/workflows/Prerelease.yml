@@ -1,15 +1,9 @@
 name: Docker Image CI
 
+
 on:
-  push:
-    branches: 
-      - "*"
-  pull_request:
-    branches:
-      - "*"
-#on:
-  #release:
-    #types: [prereleased]
+  release:
+    types: [prereleased]
 
 jobs:
 
