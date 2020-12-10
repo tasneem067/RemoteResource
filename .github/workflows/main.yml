@@ -9,7 +9,9 @@ on:
   pull_request:
     branches:
       - "*"
-        
+env:
+  QREPOURL: ${{secrets.QREPOURL}}     
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -34,4 +36,4 @@ jobs:
         npm test
     - name: Build the Docker image
       run: |
-        docker build . --file Dockerfile --rm -t "quay.io/razee/remoteresource:${GITHUB_SHA}"
+        docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
