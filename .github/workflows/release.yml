@@ -28,9 +28,9 @@ jobs:
     # Runs a set of commands using the runners shell
     - name: Build the Docker image
       run: |
-         docker build . --file Dockerfile --rm -t "quay.io/razee/remoteresource:${GITHUB_SHA}"
+         docker build . --file Dockerfile --rm -t "quay.io/tasneem067/tasneem_test1:${GITHUB_SHA}"
          docker images
-         docker tag quay.io/razee/remoteresource:${GITHUB_SHA} quay.io/razee/remoteresource:${GITHUB_SHA}
+         docker tag quay.io/tasneem067/tasneem_test1:${GITHUB_SHA} quay.io/tasneem067/tasneem_test1:${GITHUB_SHA}
          ./build/process-template.sh kubernetes/RemoteResource/resource.yaml >/tmp/resource.yaml
    
    #Publish to npm registry
