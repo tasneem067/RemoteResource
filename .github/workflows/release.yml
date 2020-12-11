@@ -31,8 +31,8 @@ jobs:
     # Runs a set of commands using the runners shell
     - name: Build the Docker image
       run: |
-         echo "event_name=${github.event_name}"
-         echo "event_action=${github.event.action}"
+         echo "GITHUB_EVENT_NAME=$GITHUB_EVENT_NAME"
+         echo "GITHUB_ACTION=$GITHUB_ACTION
       if: github.event_name == 'release' && github.event.action == 'released'
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
          docker images
