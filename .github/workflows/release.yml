@@ -30,6 +30,7 @@ jobs:
     # Runs a set of commands using the runners shell
     - name: Build the Docker image
       run: |
+      if: github.event_name == 'release' && github.event.action == 'released'
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
          docker images
          IMAGE_ID=${QREPOURL}:${GITHUB_SHA}
@@ -56,7 +57,10 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
     - run: git config user.email "${NPMJS_EMAIL}"
+      if: github.event_name == 'release' && github.event.action == 'released'
     - run: npm ci
+      if: github.event_name == 'release' && github.event.action == 'released'
     - run: npm publish
+      if: github.event_name == 'release' && github.event.action == 'released'
       env:
         NODE_AUTH_TOKEN: "${NPMJS_API_KEY}"
