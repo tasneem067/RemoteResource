@@ -23,13 +23,16 @@ jobs:
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    
+
+     
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     
     # Runs a set of commands using the runners shell
     - name: Build the Docker image
       run: |
+         echo "event_name=${github.event_name}"
+         echo "event_action=${github.event.action}"
       if: github.event_name == 'release' && github.event.action == 'released'
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
          docker images
