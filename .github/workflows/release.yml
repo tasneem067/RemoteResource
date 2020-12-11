@@ -17,12 +17,14 @@ jobs:
    
  # This workflow contains a two jobs called "build"
   build:
+    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    
+   
+    - name: checkout code
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     
@@ -43,7 +45,9 @@ jobs:
    #Publish to npm registry
      
   publish-npm:
+    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     needs: build
+ 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps:
