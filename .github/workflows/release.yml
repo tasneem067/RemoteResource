@@ -32,7 +32,7 @@ jobs:
     - name: Build the Docker image
       run: |
          echo "GITHUB_EVENT_NAME=$GITHUB_EVENT_NAME"
-         echo "GITHUB_ACTION=$GITHUB_ACTION
+         echo "GITHUB_ACTION=$GITHUB_ACTION"
       if: github.event_name == 'release' && github.event.action == 'released'
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
          docker images
