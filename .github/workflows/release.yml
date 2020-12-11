@@ -25,13 +25,14 @@ jobs:
     steps:
    
     - name: checkout code
-    - if: github.event_name == 'release' && github.event.action == 'published' 
+    
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
     
     # Runs a set of commands using the runners shell
     - name: Build the Docker image
       run: |
+      if: github.event_name == 'release' && github.event.action == 'published' 
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
          docker images
          IMAGE_ID=${QREPOURL}:${GITHUB_SHA}
@@ -53,14 +54,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: checkout code and setup node
-    - if: github.event_name == 'release' && github.event.action == 'published' 
+   
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
     - run: git config user.email "${NPMJS_EMAIL}"
+      if: github.event_name == 'release' && github.event.action == 'published'
     - run: npm ci
+      if: github.event_name == 'release' && github.event.action == 'published'
     - run: npm publish
+      if: github.event_name == 'release' && github.event.action == 'published' 
       env:
         NODE_AUTH_TOKEN: "${NPMJS_API_KEY}"
