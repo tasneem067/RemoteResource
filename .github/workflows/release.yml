@@ -6,8 +6,6 @@ on:
   
   release:
     types: [released]
-    tags:
-    - '[0-9]+.[0-9]+.[0-9]'
 
 #on:
   #push:
@@ -20,17 +18,27 @@ env:
   
   # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-   
+
+    
  # This workflow contains a two jobs called "build"
   build:
-    
+   
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     #if: github.event_name == 'release' && github.event.action == 'created'
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-
+    - name: Check Tag
+      id: check-tag
+      run: |
+        if [[ ${{ github.event.ref }} =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo ::set-output name=match::true
+        fi
+    - name: Build
+      if: steps.check-tag.outputs.match == 'true'
+      run: |
+        echo "Tag is a match"
      
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
