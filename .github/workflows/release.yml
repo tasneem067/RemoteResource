@@ -10,8 +10,8 @@ name: Build and Test Release Action
 on:
   push:
     tags:
-    - '[0-9]+.[0-9]+.[0-9]'
-
+    #- '[0-9]+.[0-9]+.[0-9]'
+    - '[0-9]+.[0-9]+.[0-9]+_[0-9]{3}'
 # env variable
 env:
   QREPOURL: ${{secrets.QREPOURL}}  
