@@ -34,10 +34,8 @@ jobs:
             echo "::set-output name=run_jobs::false"
           fi
           echo 
-      - name: Build
-        if: steps.check-tag.outputs.match == 'false'
-        run: |
-          echo "Tag is not a match"
+        shell: bash
+
           
   test1:
     needs: [check_tag]
@@ -48,6 +46,7 @@ jobs:
         if: steps.check-tag.outputs.match == 'true'
         run: |
           echo "Tag is a match"
+        shell: bash
     
   build:
     needs: [check_tag]
@@ -67,7 +66,8 @@ jobs:
          echo VERSION=$VERSION
          docker tag ${QREPOURL}:${GITHUB_SHA} ${QREPOURL}:${VERSION}
          ./build/process-template.sh kubernetes/RemoteResource/resource.yaml >/tmp/resource.yaml
-   
+        shell: bash
+    
    #Publish to npm registry
      
   publish-npm:
