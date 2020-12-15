@@ -5,7 +5,7 @@ on:
   # Triggers the workflow on Release type published
   
   release:
-    types: [published]
+    types: [released]
 
 #on:
   #push:
