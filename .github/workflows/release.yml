@@ -8,9 +8,11 @@ name: Build and Test Release Action
     #types: [published]
 
 on:
-   push:
+  push:
+    branches:
+      - "release"
     tags:
-     - '[0-9]+\.[0-9]+\_[0-9]'
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 # env variable
 env:
@@ -23,7 +25,7 @@ jobs:
   build:
     #if: github.event_name == 'release' && github.event.action == 'published' && github.event.ref == ^refs/tags/v[0-9]+\.[0-9]+\_[0-9]
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'created'
+    #if: github.event_name == 'release' && github.event.action == 'created'
     steps:
 
     - uses: actions/checkout@v2
