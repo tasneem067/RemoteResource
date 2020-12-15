@@ -1,4 +1,4 @@
-name: Build and Test Prerelease
+name: Release and Prerelease
 
 #on:
   #release:
