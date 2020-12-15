@@ -18,6 +18,8 @@ env:
 jobs:
   check_tag:
     runs-on: ubuntu-latest
+    outputs:
+      run_other_jobs: ${{ steps.check-tag.outputs.match }}
     steps:
       - name: Get the version
         id: get_version
@@ -34,7 +36,7 @@ jobs:
 
   build:
     needs: [check_tag]
-    if: steps.check-tag.outputs.match == 'true'
+    if: needs.check_tag.outputs.run_other_jobs == 'true'
     runs-on: ubuntu-latest 
     steps:
       - uses: actions/checkout@v2
