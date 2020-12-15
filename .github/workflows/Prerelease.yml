@@ -2,7 +2,7 @@ name: Release and Prerelease
 
 on:
   release:
-    types: [prereleased]
+    types: [published, created, prereleased]
 
 #on:
   #push:
