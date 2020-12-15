@@ -1,16 +1,16 @@
 name: Build and Test Release Action
 
 # Controls when the action will run.
-on:
+#on:
   # Triggers the workflow on Release type published
   
-  release:
-    types: [published]
+  #release:
+    #types: [published]
 
-#on:
-  #push:
-   # tags:
-   #  - '[0-9]+.[0-9]+.[0-9]'
+on:
+  push:
+    tags:
+     - '[0-9]+.[0-9]+.[0-9]'
 
 # env variable
 env:
@@ -19,13 +19,15 @@ env:
   # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 
 jobs:
-  
+
   build:
+
     runs-on: ubuntu-latest
     steps:
 
       - uses: actions/checkout@v2
       - name: Build the Docker image
+        if: "!github.event.release.prerelease"
         run: |
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
          docker images
@@ -55,6 +57,7 @@ jobs:
           scope: '@testtasneem' 
 
       - name: publish npm
+        if: "!github.event.release.prerelease"
         run: |
             npm ci
             npm publish --access public
