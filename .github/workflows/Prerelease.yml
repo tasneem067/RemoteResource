@@ -1,10 +1,14 @@
 name: Build and Test Prerelease
 
+
+
 on:
-  push:
-    tags:
-     - '[0-9]+.[0-9]+.[0-9]'
-     - '[0-9]+.[0-9]+.[0-9]+_[0-9]'
+  release:
+    types: [prereleased]
+
+    #tags:
+     #- '[0-9]+.[0-9]+.[0-9]'
+     #- '[0-9]+.[0-9]+.[0-9]+_[0-9]{3}'
     
 env:
   USERNAME: ${{secrets.QUSERNAME}}
@@ -19,9 +23,11 @@ jobs:
     if: github.event.release.prerelease
     
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: |
-        docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
-        docker login -u="${USERNAME}" -p="${PASSWORD}" quay.io
-        docker push "${QREPOURL}:${GITHUB_SHA}"
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        with:
+         version_regex: ^[0-9]+\.[0-9]+\.[0-9]
+         run: |
+          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
+          docker login -u="${USERNAME}" -p="${PASSWORD}" quay.io
+          docker push "${QREPOURL}:${GITHUB_SHA}"
