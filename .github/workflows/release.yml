@@ -1,16 +1,16 @@
 name: Build and Test Release Action
 
 # Controls when the action will run.
-on:
+#on:
   # Triggers the workflow on Release type published
   
-  release:
-    types: [published]
+ # release:
+   # types: [published]
 
-#on:
-  #push:
-    #tags:
-     #- '[0-9]+.[0-9]+.[0-9]'
+on:
+  push:
+    tags:
+     - '[0-9]+.[0-9]+.[0-9]'
 
 # env variable
 env:
@@ -19,38 +19,10 @@ env:
   # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 
 jobs:
-  check_tag:
-    runs-on: ubuntu-latest
-    outputs:
-      run_other_jobs: ${{ steps.check-tag.outputs.run_jobs }}
-    steps:
-      - name: check tag ${{ github.ref }}
-        id: check-tag
-        run: |
-          echo ${{ github.ref }}
-          if [[${{ github.ref }} =~ refs\/tags\/release\/v[0-9]+\.[0-9]+\.[0-9]]]; then
-            echo "::set-output name=run_jobs::true"
-          else
-            echo "::set-output name=run_jobs::false"
-          fi
-          echo 
-        shell: bash
-
-          
-  test1:
-    needs: [check_tag]
-    if: needs.check_tag.outputs.run_other_jobs == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build
-        if: steps.check-tag.outputs.match == 'true'
-        run: |
-          echo "Tag is a match"
-        shell: bash
     
   build:
-    needs: [check_tag]
-    if: needs.check_tag.outputs.run_other_jobs == 'true'
+
+    if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -72,8 +44,8 @@ jobs:
      
   publish-npm:
 
-    needs: [check_tag]
-    if: needs.check_tag.outputs.run_other_jobs == 'true'
+
+    if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
