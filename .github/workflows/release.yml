@@ -1,18 +1,16 @@
 name: Build and Test Release Action
 
 # Controls when the action will run.
-#on:
+on:
   # Triggers the workflow on Release type published
   
-  #release:
-    #types: [published]
+  release:
+    types: [published]
 
-on:
-  push:
-    branches:
-      - "release"
-    tags:
-      - "[0-9]+.[0-9]+.[0-9]+"
+#on:
+  #push:
+    #tags:
+     #- '[0-9]+.[0-9]+.[0-9]'
 
 # env variable
 env:
@@ -21,18 +19,31 @@ env:
   # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 
 jobs:
-
-  build:
-    #if: "!github.event.release.prerelease"
-    #if: github.event_name == 'release' && github.event.action == 'published' && github.event.ref == ^refs/tags/v[0-9]+\.[0-9]+\_[0-9]
+  check_tag:
     runs-on: ubuntu-latest
-    #if: github.event_name == 'release' && github.event.action == 'created'
+    outputs:
+      run_other_jobs: ${{ steps.check-tag.outputs.run_jobs }}
     steps:
-
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      if: github.event.release.prerelease != true
-      run: |
+      - name: check tag ${{ github.ref }}
+        id: check-tag
+        run: |
+          echo ${{ github.ref }}
+          if [[${{ github.ref }} =~ refs\/tags\/release\/[0-9]+\.[0-9]+\.[0-9]]]; then
+            echo "::set-output name=run_jobs::true"
+          else
+            echo "::set-output name=run_jobs::false"
+            exit 1
+          fi
+ 
+ 
+  build:
+    needs: [check_tag]
+    if: needs.check_tag.outputs.run_other_jobs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: |
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
          docker images
          IMAGE_ID=${QREPOURL}:${GITHUB_SHA}
@@ -43,27 +54,24 @@ jobs:
          echo VERSION=$VERSION
          docker tag ${QREPOURL}:${GITHUB_SHA} ${QREPOURL}:${VERSION}
          ./build/process-template.sh kubernetes/RemoteResource/resource.yaml >/tmp/resource.yaml
-
-    
+   
    #Publish to npm registry
      
   publish-npm:
 
-    needs : build
-    #if: github.event_name == 'release' && github.event.action == 'published'
+    needs: [check_tag , build]
+    if: needs.check_tag.outputs.run_other_jobs == 'true'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: 12
-        registry-url: https://registry.npmjs.org/
-        scope: '@testtasneem' 
-        #if: "!github.event.release.prerelease"
-    - name: publish npm
-      if: github.event.release.prerelease != true
-      run: |
-        npm ci
-        npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+          scope: '@testtasneem' 
+      - name: publish npm
+        run: |
+            npm ci
+            npm publish --access public
+            env:
+            NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
