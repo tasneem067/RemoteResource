@@ -32,7 +32,16 @@ jobs:
           else
             echo "::set-output name=run_jobs::false"
           fi
- 
+  test1:
+    needs: [check_tag]
+    if: needs.check_tag.outputs.run_other_jobs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        if: steps.check-tag.outputs.match == 'true'
+        run: |
+          echo "Tag is a match"
+    
   build:
     needs: [check_tag]
     if: needs.check_tag.outputs.run_other_jobs == 'true'
