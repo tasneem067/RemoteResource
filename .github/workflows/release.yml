@@ -22,16 +22,16 @@ jobs:
   check_tag:
     runs-on: ubuntu-latest
     outputs:
-      run_other_jobs: ${{ steps.check-tag.outputs.run_jobs }}
+      run_other_jobs: ${{ steps.check-tag.outputs.match }}
     steps:
       - name: check tag ${{ github.ref }}
         id: check-tag
         run: |
           echo ${{ github.ref }}
           if [[ ${{ github.ref }} =~ ^refs\/tags\/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::set-output name=run_jobs::true"
+            echo "::set-output name=match::true"
           else
-            echo "::set-output name=run_jobs::false"
+            echo "::set-output name=match::false"
             exit 1
           fi
  
