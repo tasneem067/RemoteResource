@@ -27,14 +27,11 @@ jobs:
       - name: Check Tag
         id: check-tag
         run: |
-          echo ${{ steps.get_version.outputs.VERSION }}
-          echo "Hello World"
           if [[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+$ || ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+_[0-9]{3}$ ]]; then
             echo ::set-output name=match::true
           else
             exit 1
           fi
- 
 
   build:
     needs: [check_tag]
@@ -43,7 +40,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image 
-        #if: needs.check_tag.outputs.run_other_jobs == 'true'
         run: |
           docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
           docker login -u="${USERNAME}" -p="${PASSWORD}" quay.io
