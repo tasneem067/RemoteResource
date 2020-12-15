@@ -46,7 +46,7 @@ jobs:
      
   publish-npm:
 
-
+    needs : build
     #if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
@@ -56,10 +56,8 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
           scope: '@testtasneem' 
-
-      - name: publish npm
         #if: "!github.event.release.prerelease"
-        run: |
+          run: |
             npm ci
             npm publish --access public
             env:
