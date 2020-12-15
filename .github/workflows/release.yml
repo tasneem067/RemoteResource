@@ -1,16 +1,16 @@
 name: Build and Test Release Action
 
 # Controls when the action will run.
-#on:
+on:
   # Triggers the workflow on Release type published
   
- # release:
-   # types: [published]
+  release:
+    types: [published]
 
-on:
-  push:
-    tags:
-     - '[0-9]+.[0-9]+.[0-9]'
+#on:
+  #push:
+   # tags:
+   #  - '[0-9]+.[0-9]+.[0-9]'
 
 # env variable
 env:
@@ -19,13 +19,14 @@ env:
   # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 
 jobs:
-    
+  
   build:
-
-    if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v2
+        with:
+          version_regex: ^[[0-9]]+\.[[0-9]]+\.[[0-9]]+
       - name: Build the Docker image
         run: |
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
@@ -45,15 +46,18 @@ jobs:
   publish-npm:
 
 
-    if: github.event_name == 'release' && github.event.action == 'published'
+    #if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          version_regex: ^[[0-9]]+\.[[0-9]]+\.[[0-9]]+
       - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
           scope: '@testtasneem' 
+          version_regex: ^[[0-9]]+\.[[0-9]]+\.[[0-9]]+
       - name: publish npm
         run: |
             npm ci
