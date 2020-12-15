@@ -17,7 +17,7 @@ env:
  
 
 jobs:
-  check_Prerelease_tag:
+  check_prerelease_tag:
     runs-on: ubuntu-latest
     outputs:
       run_other_jobs: ${{ steps.check-tag.outputs.match }}
@@ -36,7 +36,7 @@ jobs:
 
   pre-release_build:
     
-    needs: [check_Prerelease_tag]
+    needs: [check_prerelease_tag]
     if: needs.check_tag.outputs.run_other_jobs == 'true'
     runs-on: ubuntu-latest 
     steps:
