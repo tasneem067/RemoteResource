@@ -32,11 +32,12 @@ jobs:
 
   build:
     needs: [check_tag]
-    if: needs.check_tag.outputs.run_other_jobs == 'true'
+    #if: needs.check_tag.outputs.run_other_jobs == 'true'
     runs-on: ubuntu-latest 
     steps:
       - uses: actions/checkout@v2
       - name: Build the Docker image 
+        if: needs.check_tag.outputs.run_other_jobs == 'true'
         run: |
           docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
           docker login -u="${USERNAME}" -p="${PASSWORD}" quay.io
