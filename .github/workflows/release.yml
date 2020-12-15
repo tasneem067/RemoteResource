@@ -8,7 +8,7 @@ name: Build and Test Release Action
     #types: [published]
 
 on:
-  create: 
+ push: 
     tags:
      - '[0-9]+.[0-9]+_[0-9]'
 
@@ -21,13 +21,13 @@ env:
 jobs:
 
   build:
-
+    if: github.event_name == 'release' && github.event.action == 'push'
     runs-on: ubuntu-latest
     steps:
 
       - uses: actions/checkout@v2
       - name: Build the Docker image
-        if: "!github.event.release.prerelease"
+
         run: |
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
          docker images
