@@ -41,6 +41,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the Docker image 
         run: |
+          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
           docker login -u="${USERNAME}" -p="${PASSWORD}" quay.io
           docker push "${QREPOURL}:${GITHUB_SHA}"
  
