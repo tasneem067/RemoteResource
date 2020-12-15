@@ -1,14 +1,14 @@
 name: Release and Prerelease
 
-on:
-  release:
-    types: [published, created, prereleased]
-
 #on:
-  #push:
-    #tags:
-     #- '^[0-9]+.[0-9]+.[0-9]$'
-     #- '^[0-9]+.[0-9]+.[0-9]+_[0-9]{3}$'
+  #release:
+    #types: [published, prereleased]
+
+on:
+  push:
+    tags:
+     - '^[0-9]+.[0-9]+.[0-9]$'
+     - '^[0-9]+.[0-9]+.[0-9]+_[0-9]{3}$'
     
 env:
   USERNAME: ${{secrets.QUSERNAME}}
@@ -17,10 +17,11 @@ env:
  
 
 jobs:
-  check_prerelease_tag:
+  check_tag:
     runs-on: ubuntu-latest
     outputs:
-      run_other_jobs: ${{ steps.check-tag.outputs.match }}
+      release: ${{ steps.check-tag.outputs.release }}
+      prerelease: ${{ steps.check-tag.outputs.prerelease }}
     steps:
       - name: Get the version
         id: get_version
@@ -28,16 +29,17 @@ jobs:
       - name: Check Tag
         id: check-tag
         run: |
-          if [[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+$ || ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+_[0-9]{3}$ ]]; then
-            echo ::set-output name=match::true
-          else
-            exit 1
+          if [[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then
+            echo ::set-output name=release::true
+            echo ::set-output name=prerelease::true
+          else if [[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+_[0-9]{3}$ ]]
+            echo ::set-output name=prerelease::true
           fi
 
   pre-release_build:
     
-    needs: [check_prerelease_tag]
-    if: needs.check_tag.outputs.run_other_jobs == 'true'
+    needs: [check_tag]
+    if: needs.check_tag.outputs.prerelease == 'true'
     runs-on: ubuntu-latest 
     steps:
       - uses: actions/checkout@v2
@@ -48,27 +50,10 @@ jobs:
           docker push "${QREPOURL}:${GITHUB_SHA}"
  
  
-  check_release_tag:
-    runs-on: ubuntu-latest
-    outputs:
-      run_job: ${{ steps.check-tag.outputs.match }}
-    steps:
-      - name: check tag ${{ github.ref }}
-        id: check-tag
-        run: |
-          echo ${{ github.ref }}
-          if [[ ${{ github.ref }} =~ ^refs\/tags\/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::set-output name=match::true"
-          else
-            echo "::set-output name=match::false"
-            exit 1
-          fi
- 
- 
   release-build:
     
-    needs: [check_release_tag]
-    if: needs.check_tag.outputs.run_job == 'true'
+    needs: [check_tag]
+    if: steps.check-tag.outputs.release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
