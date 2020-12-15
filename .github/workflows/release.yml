@@ -1,16 +1,16 @@
 name: Build and Test Release Action
 
 # Controls when the action will run.
-on:
+#on:
   # Triggers the workflow on Release type published
   
-  release:
-    types: [published]
+  #release:
+    #types: [published]
 
-#on:
-   #push:
-    #tags:
-    # - '[0-9]+.[0-9]+_[0-9]'
+on:
+   push:
+    tags:
+     - '[0-9]+\.[0-9]+\_[0-9]'
 
 # env variable
 env:
@@ -21,14 +21,15 @@ env:
 jobs:
 
   build:
-    if: github.event_name == 'release' && github.event.action == 'published' && github.event.ref == ^refs/tags/v[0-9]+\.[0-9]+\_[0-9]
+    #if: github.event_name == 'release' && github.event.action == 'published' && github.event.ref == ^refs/tags/v[0-9]+\.[0-9]+\_[0-9]
     runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'created'
     steps:
 
-      - uses: actions/checkout@v2
-      - name: Build the Docker image
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
 
-        run: |
+      run: |
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
          docker images
          IMAGE_ID=${QREPOURL}:${GITHUB_SHA}
@@ -39,7 +40,7 @@ jobs:
          echo VERSION=$VERSION
          docker tag ${QREPOURL}:${GITHUB_SHA} ${QREPOURL}:${VERSION}
          ./build/process-template.sh kubernetes/RemoteResource/resource.yaml >/tmp/resource.yaml
-        shell: bash
+
     
    #Publish to npm registry
      
@@ -49,15 +50,16 @@ jobs:
     #if: github.event_name == 'release' && github.event.action == 'published'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
-          scope: '@testtasneem' 
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 12
+        registry-url: https://registry.npmjs.org/
+        scope: '@testtasneem' 
         #if: "!github.event.release.prerelease"
-          run: |
-            npm ci
-            npm publish --access public
-            env:
-            NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
+    - name: publish npm
+      run: |
+        npm ci
+        npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
