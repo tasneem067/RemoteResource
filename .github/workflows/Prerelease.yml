@@ -31,6 +31,8 @@ jobs:
           echo "Hello World"
           if [[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+$ || ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+_[0-9]{3}$ ]]; then
             echo ::set-output name=match::true
+          else
+            exit 1
           fi
  
 
