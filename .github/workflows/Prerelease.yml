@@ -39,7 +39,7 @@ jobs:
   pre-release_build:
     
     needs: [check_tag]
-    if: needs.check_tag.outputs.prerelease == 'true'
+    if: needs.check-tag.outputs.prerelease == 'true'
     runs-on: ubuntu-latest 
     steps:
       - uses: actions/checkout@v2
@@ -53,7 +53,7 @@ jobs:
   release-build:
     
     needs: [check_tag]
-    if: steps.check-tag.outputs.release == 'true'
+    if: needs.check-tag.outputs.release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
