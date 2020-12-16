@@ -30,10 +30,10 @@ jobs:
         id: check-tag
         # shellcheck shell=bash
         run: |
-          if "[[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]"; then          
+          if [[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then          
             echo ::set-output name=prerelease::true
             echo ::set-output name=release::true
-          elif "[[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+_[0-9]{3}$ ]]"; then
+          elif [[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+_[0-9]{3}$ ]]; then
             echo ::set-output name=prerelease::true
           else
             exit 1
