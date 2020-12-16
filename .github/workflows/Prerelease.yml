@@ -37,6 +37,7 @@ jobs:
           else
             echo "exit 1"
           fi
+        shell: bash
 
   pre-release_build:
     
