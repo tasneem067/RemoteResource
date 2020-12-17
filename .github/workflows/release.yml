@@ -1,0 +1,64 @@
+name: Build and Test Release Action
+
+# Controls when the action will run.
+#on:
+  # Triggers the workflow on Release type published
+  
+  #release:
+    #types: [published]
+
+on:
+  release:
+    types: [published]
+    tags:
+     - '[0-9]+.[0-9]+_[0-9]'
+
+# env variable
+env:
+  QREPOURL: ${{secrets.QREPOURL}}  
+  
+  # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        #if: "!github.event.release.prerelease"
+        run: |
+         docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
+         docker images
+         IMAGE_ID=${QREPOURL}:${GITHUB_SHA}
+         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+         [ "$VERSION" == "master" ] && VERSION=latest
+         echo IMAGE_ID=$IMAGE_ID
+         echo VERSION=$VERSION
+         docker tag ${QREPOURL}:${GITHUB_SHA} ${QREPOURL}:${VERSION}
+         ./build/process-template.sh kubernetes/RemoteResource/resource.yaml >/tmp/resource.yaml
+        shell: bash
+    
+   #Publish to npm registry
+     
+  publish-npm:
+
+    needs : build
+    #if: github.event_name == 'release' && github.event.action == 'published'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+          scope: '@testtasneem' 
+        #if: "!github.event.release.prerelease"
+          run: |
+            npm ci
+            npm publish --access public
+            env:
+            NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
