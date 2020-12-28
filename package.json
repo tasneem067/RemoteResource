@@ -23,7 +23,8 @@
     "commit": "git-cz",
     "yaml-lint": "npx yaml-lint .travis.yml kubernetes/RemoteResource/resource.yaml",
     "jsonlint": "npx jsonlint --quiet build/viewTemplate.json",
-    "shellcheck": "npx shellcheck build/*.sh"
+    "shellcheck": "npx shellcheck build/*.sh",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -60,6 +61,7 @@
     "nyc": "^15.1.0",
     "rewire": "^5.0.0",
     "sinon": "^9.2.0",
+    "standard-version": "^9.0.0",
     "yaml-lint": "^1.2.4"
   }
 }
