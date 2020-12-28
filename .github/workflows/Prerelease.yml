@@ -75,7 +75,7 @@ jobs:
           scope: '@testtasneem' 
       - name: publish npm
         run: |
-            npm ci
+            npm ci --also=dev
             npm publish --access public
             npm run release
             env:
