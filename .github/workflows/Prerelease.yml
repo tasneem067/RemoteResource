@@ -76,7 +76,7 @@ jobs:
       - name: publish npm
         run: |
             npm install --also=dev
-            npm run release -- --release-as ${VERSION} 
+            npm run release -- --release-as echo $VERSION 
             npm publish --access public
             env:
             NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
