@@ -74,5 +74,4 @@
       "pre-commit": "npm run lint"
     }
   }
-
 }
