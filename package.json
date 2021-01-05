@@ -76,7 +76,7 @@
   },
   "standard-version": {
     "skip": {
-      "commit": true
+      "commit": true,
       "tag": true
     }
   }
