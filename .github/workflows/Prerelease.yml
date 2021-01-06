@@ -58,6 +58,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+         ref: master
+         token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build the Docker image
         run: |
          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
@@ -75,8 +78,11 @@ jobs:
           scope: '@testtasneem' 
       - name: publish npm
         run: |
+            git config user.name ${{ github.actor }}
             npm install --also=dev
             npm run release
             npm publish --access public
+            git status
+            git push -u origin master
             env:
             NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
