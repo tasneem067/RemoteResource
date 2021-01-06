@@ -81,8 +81,8 @@ jobs:
             git config user.name ${{ github.actor }}
             npm install --also=dev
             npm run release
-            npm publish --access public
             git status
             git push -u origin master
+            npm publish --access public
             env:
             NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
