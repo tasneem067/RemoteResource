@@ -1,5 +1,5 @@
 {
-  "name": "@testtasneem/remoteresource",
+  "name": "@nazreen/remoteresource",
   "version": "3.0.9",
   "description": "RazeeDeploy: component to download and manage files",
   "main": "./src/index.js",
