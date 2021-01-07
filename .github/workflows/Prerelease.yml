@@ -22,7 +22,7 @@ jobs:
     outputs:
       release: ${{ steps.check-tag.outputs.release }}
       prerelease: ${{ steps.check-tag.outputs.prerelease }}
-      version: ${{ steps.check-tag.outputs.VERSION }} 
+      version: ${{ steps.get_version.outputs.VERSION }} 
     steps:
       - name: Get the version
         id: get_version
