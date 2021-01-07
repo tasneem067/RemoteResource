@@ -80,9 +80,8 @@ jobs:
       - name: publish npm
         run: |
             git config user.name ${{ github.actor }}
-            npm install --also=dev
+            npm ci
             npm run release -- --release-as ${{ needs.check_tag.outputs.version }}
-            git status
             git push -u origin master
             npm publish --access public
             env:
