@@ -86,4 +86,4 @@ jobs:
             git push -u origin master
             npm publish --access public
             env:
-            NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
+             NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
