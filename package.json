@@ -1,5 +1,5 @@
 {
-  "name": "@testtasneem/remoteresource",
+  "name": "k8sremoteresource",
   "version": "2.0.1",
   "description": "RazeeDeploy: component to download and manage files",
   "main": "./src/index.js",
