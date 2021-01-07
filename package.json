@@ -1,6 +1,6 @@
 {
   "name": "@nazreen/remoteresource",
-  "version": "4.9.7",
+  "version": "1.6.0",
   "description": "RazeeDeploy: component to download and manage files",
   "main": "./src/index.js",
   "bin": "./bin/remoteresource",
