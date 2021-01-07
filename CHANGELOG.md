@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 3.0.3 (2021-01-07)
+
+
+### Bug Fixes
+
+* fixed1 ([586155f](https://github.com/razee-io/RemoteResource/commit/586155f7c7f9d8c3067f3bf715b546fe6b6bb2e3))
+
 ### 3.0.4 (2021-01-07)
 
 ### 3.0.5 (2021-01-07)
