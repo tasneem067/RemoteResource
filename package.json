@@ -1,6 +1,6 @@
 {
   "name": "k8sremoteresource",
-  "version": "2.0.1",
+  "version": "3.0.9",
   "description": "RazeeDeploy: component to download and manage files",
   "main": "./src/index.js",
   "bin": "./bin/remoteresource",
