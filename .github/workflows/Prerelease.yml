@@ -14,6 +14,7 @@ env:
   USERNAME: ${{secrets.QUSERNAME}}
   PASSWORD: ${{secrets.QPASSWORD}}
   QREPOURL: ${{secrets.QREPOURL}}
+  NPMJS_EMAIL: ${{secrets.NPMJSEMAIL}}
  
 
 jobs:
@@ -80,6 +81,7 @@ jobs:
       - name: publish npm
         run: |
             git config user.name ${{ github.actor }}
+            git config user.email "${NPMJS_EMAIL}"
             npm ci
             npm run release -- --release-as ${{ needs.check_tag.outputs.version }}
             git push -u origin master
