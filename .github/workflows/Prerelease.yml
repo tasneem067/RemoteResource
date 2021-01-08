@@ -81,8 +81,8 @@ jobs:
         run: |
             git config user.name ${{ github.actor }}
             npm ci
-            npm publish --access public
             npm run release -- --release-as ${{ needs.check_tag.outputs.version }}
             git push -u origin master
+            npm publish --access public
             env:
              NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
