@@ -1,20 +1,19 @@
 name: Release and Prerelease
 
 #on:
-  #release:
-    #types: [published, prereleased]
+#release:
+#types: [published, prereleased]
 
 on:
   push:
-    tags: 
-        - '[0-9]+.[0-9]+.[0-9]'
-        - '[0-9]+.[0-9]+.[0-9]+_[0-9][0-9][0-9]'
-    
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]"
+      - "[0-9]+.[0-9]+.[0-9]+_[0-9][0-9][0-9]"
+
 env:
   USERNAME: ${{secrets.QUSERNAME}}
   PASSWORD: ${{secrets.QPASSWORD}}
   QREPOURL: ${{secrets.QREPOURL}}
- 
 
 jobs:
   check_tag:
@@ -22,14 +21,13 @@ jobs:
     outputs:
       release: ${{ steps.check-tag.outputs.release }}
       prerelease: ${{ steps.check-tag.outputs.prerelease }}
-      version: ${{ steps.get_version.outputs.VERSION }} 
+      version: ${{ steps.get_version.outputs.VERSION }}
     steps:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Check Tag
         id: check-tag
-        # shellcheck shell=bash
         run: |
           if [[ ${{ steps.get_version.outputs.VERSION }} =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then          
             echo ::set-output name=prerelease::true
@@ -39,51 +37,55 @@ jobs:
           else
             exit 1
           fi
+
   pre-release_build:
     needs: [check_tag]
     if: needs.check_tag.outputs.prerelease == 'true'
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build the Docker image 
+      - name: Build the Docker image
         run: |
           docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
           docker login -u="${USERNAME}" -p="${PASSWORD}" quay.io
           docker push "${QREPOURL}:${GITHUB_SHA}"
- 
- 
+
   release-build:
-    
     needs: [check_tag]
     if: needs.check_tag.outputs.release == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-         ref: master
-         token: ${{ secrets.GITHUB_TOKEN }}
+          ref: master
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build the Docker image
         run: |
-         docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
-         docker images
-         IMAGE_ID=${QREPOURL}:${GITHUB_SHA}
-         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-         [ "$VERSION" == "master" ] && VERSION=latest
-         docker tag ${QREPOURL}:${GITHUB_SHA} ${QREPOURL}:${VERSION}
-         ./build/process-template.sh kubernetes/RemoteResource/resource.yaml >/tmp/resource.yaml
+          docker build . --file Dockerfile --rm -t "${QREPOURL}:${GITHUB_SHA}"
+          docker images
+          IMAGE_ID=${QREPOURL}:${GITHUB_SHA}
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [ "$VERSION" == "master" ] && VERSION=latest
+          docker tag ${QREPOURL}:${GITHUB_SHA} ${QREPOURL}:${VERSION}
+          ./build/process-template.sh kubernetes/RemoteResource/resource.yaml >/tmp/resource.yaml
+          
+  publish-npm:
+    needs: [check_tag, release-build]
+    if: needs.check_tag.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Changelog and Publish
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-          scope: '@testtasneem'
-      - name: publish npm
-        run: |
-            git config user.name ${{ github.actor }}
-            git config user.email ${{secrets.NPMJSEMAIL}}
-            npm ci
-            npm run release -- --release-as ${{ needs.check_tag.outputs.version }}
-            git push -u origin master
-            npm publish --access public
-            env:
-              NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
+      - run: git config user.name ${{ github.actor }}
+      - run: git config user.email ${{secrets.NPMJSEMAIL}}
+      - run: npm ci
+      - run: npm run release -- --release-as ${{ needs.check_tag.outputs.version }}
+      - run: git push -u origin master
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
