@@ -84,7 +84,6 @@ jobs:
             npm ci
             npm run release -- --release-as ${{ needs.check_tag.outputs.version }}
             git push -u origin master
-            npm whoami
             npm publish --access public
             env:
               NODE_AUTH_TOKEN: ${{secrets.NPMJSAPIKEY}}
