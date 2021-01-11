@@ -75,7 +75,6 @@ jobs:
     if: needs.check_tag.outputs.release == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Generate Changelog and Publish
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
