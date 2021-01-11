@@ -1,6 +1,6 @@
 {
   "name": "@testtasneem/remoteresource",
-  "version": "1.3.7",
+  "version": "1.9.4",
   "description": "RazeeDeploy: component to download and manage files",
   "main": "./src/index.js",
   "bin": "./bin/remoteresource",
